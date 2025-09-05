@@ -1,5 +1,5 @@
 import api from "@/config/api";
-import { logoutSuccess } from "@/store/auth-slice/AuthSlice";
+import { logoutAuth, logoutSuccess } from "@/store/auth-slice/AuthSlice";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -19,8 +19,14 @@ export default function Navber() {
     try {
       let res = await api.post("/api/auth/logout");
  
-      dispatch(logoutSuccess());
-      navigate('/auth/login')
+      dispatch(logoutAuth())
+      .unwrap()
+      .then(()=>{
+        navigate('/auth/login')
+
+      }).catch((err)=>{
+        console.log("err", err)
+      })
 
     } catch (error) {
       

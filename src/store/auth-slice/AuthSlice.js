@@ -48,6 +48,17 @@ export const checkAuth = createAsyncThunk(
     }
   }
 );
+export const logoutAuth = createAsyncThunk(
+  "auth/logoutAuth",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await api.post("/api/auth/logout");
+      return response.data; // { user }
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.message || "Auth check failed");
+    }
+  }
+);
 
 const AuthSlice = createSlice({
   name: "Auth",
@@ -60,59 +71,72 @@ const AuthSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder
-      // 🔹 Login
-      .addCase(loginUser.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(loginUser.fulfilled, (state, action) => {
-        state.loading = false;
-        state.user = action.payload.user;
-        state.token = action.payload.token;
-        if (action.payload.token) {
-          localStorage.setItem("token", action.payload.token);
-        }
-      })
-      .addCase(loginUser.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      })
+  builder
+    // 🔹 Login
+    .addCase(loginUser.pending, (state) => {
+      state.loading = true;
+      state.error = null;
+    })
+    .addCase(loginUser.fulfilled, (state, action) => {
+      state.loading = false;
+      state.user = action.payload.user;
+      state.token = action.payload.token;
+      if (action.payload.token) {
+        localStorage.setItem("token", action.payload.token);
+      }
+    })
+    .addCase(loginUser.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    })
 
-      // 🔹 Register
-      .addCase(registerUser.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(registerUser.fulfilled, (state, action) => {
-        state.loading = false;
-        // state.user = action.payload.user;
-        // state.token = action.payload.token;
-        if (action.payload.token) {
-          localStorage.setItem("token", action.payload.token);
-        }
-      })
-      .addCase(registerUser.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      })
+    // 🔹 Register
+    .addCase(registerUser.pending, (state) => {
+      state.loading = true;
+      state.error = null;
+    })
+    .addCase(registerUser.fulfilled, (state, action) => {
+      state.loading = false;
+      if (action.payload.token) {
+        localStorage.setItem("token", action.payload.token);
+      }
+    })
+    .addCase(registerUser.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    })
 
-      // 🔹 Check Auth
-      .addCase(checkAuth.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(checkAuth.fulfilled, (state, action) => {
-        state.loading = false;
-        state.user = action.payload.user;
-      })
-      .addCase(checkAuth.rejected, (state, action) => {
-        state.loading = false;
-        state.user = null;
-        state.token = null;
-        state.error = action.payload;
-      });
-  },
+    // 🔹 Check Auth
+    .addCase(checkAuth.pending, (state) => {
+      state.loading = true;
+      state.error = null;
+    })
+    .addCase(checkAuth.fulfilled, (state, action) => {
+      state.loading = false;
+      state.user = action.payload.user;
+    })
+    .addCase(checkAuth.rejected, (state, action) => {
+      state.loading = false;
+      state.user = null;
+      state.token = null;
+      state.error = action.payload;
+    })
+
+    // 🔹 Logout
+    .addCase(logoutAuth.pending, (state) => {
+      state.loading = true;
+    })
+    .addCase(logoutAuth.fulfilled, (state) => {
+      state.loading = false;
+      state.user = null;
+      state.token = null;
+      localStorage.removeItem("token");
+    })
+    .addCase(logoutAuth.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    });
+}
 });
 
 export const { logoutSuccess } = AuthSlice.actions;
