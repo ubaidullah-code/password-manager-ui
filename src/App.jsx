@@ -6,7 +6,7 @@ import { checkAuth } from "./store/auth-slice/AuthSlice";
 const App = () => {
   const dispatch = useDispatch();
   const auth = useSelector((state) => state.auth);
-
+  console.log("auth", auth)
 
   useEffect(() => {
     dispatch(checkAuth());
