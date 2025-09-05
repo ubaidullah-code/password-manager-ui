@@ -41,7 +41,7 @@ const onSubmit = (e) => {
 };
   useEffect(() => {
     dispatch(getManager())
-  },[])
+  },[data ,dispatch])
   const onDelete = (id)=>{
     
     dispatch(deleteManager(id))
