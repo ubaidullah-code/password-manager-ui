@@ -4,6 +4,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 const initialState = {
     passwordManager: null,
     error: null,
+    search : []
 };
 
 export const deleteManager = createAsyncThunk(
@@ -34,9 +35,10 @@ export const addManager = createAsyncThunk(
 
 export const getManager = createAsyncThunk(
   "passwordManager/getPassword",
-  async (_, { rejectWithValue }) => {
+  async (search = "", { rejectWithValue }) => {
     try {
-      const response = await api.get("/api/password-manager/get");
+      //`/api/password-manager/get?search=${search}`
+      const response = await api.get(`/api/password-manager/get?search=${search}`);
       return response.data;
     } catch (error) {
       console.error("Error fetching passwords:", error.response?.data?.message || error.message);
@@ -57,6 +59,8 @@ export const editManager = createAsyncThunk(
     }
   }
 );
+
+
 
 const passwordSlice = createSlice({
   name: "passwordManager",
@@ -103,7 +107,8 @@ const passwordSlice = createSlice({
       })
       .addCase(editManager.rejected, (state, action) => {
         state.error = action.error.message;
-      });
+      })
+      
   },
 });
 

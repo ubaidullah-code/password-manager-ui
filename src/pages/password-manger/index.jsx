@@ -16,8 +16,13 @@ const PasswordManager = () => {
   const [data, setData] = React.useState(false)
   const [openModel, setOpenModel] = React.useState(false)
   const {user , loading} = useSelector(state => state.auth)
-  const { passwordManager } = useSelector(state => state.passwordManager)
+  const  { passwordManager ,  }  = useSelector(state => state.passwordManager)
+  
   const dispatch = useDispatch()
+// 
+
+
+
 
 
 
@@ -36,7 +41,7 @@ const onSubmit = (e) => {
 };
   useEffect(() => {
     dispatch(getManager())
-  },[data])
+  },[])
   const onDelete = (id)=>{
     
     dispatch(deleteManager(id))
@@ -68,6 +73,7 @@ const onSubmit = (e) => {
     })
 
   }
+  
  
   return (
     <>
@@ -81,7 +87,7 @@ const onSubmit = (e) => {
       />
 
       <CommonTable
-        tableControl={passwordManager?.data}
+        tableControl={ passwordManager?.data}
         onDelete={onDelete}
         onEdit={onEdit}
       />

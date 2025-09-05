@@ -1,23 +1,21 @@
-import api from "@/config/api";
-import { logoutAuth, logoutSuccess } from "@/store/auth-slice/AuthSlice";
-import React, { useState } from "react";
+
+import { logoutAuth } from "@/store/auth-slice/AuthSlice";
+import {  getManager } from "@/store/password-manager-Slice";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-// Tailwind-styled navbar for a single-page password manager app
-// - Responsive
-// - Search (for passwords / vault)
-// - User avatar + dropdown (desktop only)
-// - Mobile menu with simple links
+
 
 export default function Navber() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [search, setSearch] = useState("");
   const [profileOpen, setProfileOpen] = useState(false);
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const logout = async () => {
     try {
-      let res = await api.post("/api/auth/logout");
+  
  
       dispatch(logoutAuth())
       .unwrap()
@@ -33,6 +31,10 @@ export default function Navber() {
       null
     }
   };
+  useEffect(() => {
+    dispatch(getManager(search))
+
+  }, [search]);
 
   return (
     <header className="bg-white/90 backdrop-blur-sm border-b border-slate-200">
@@ -101,6 +103,7 @@ export default function Navber() {
                   className="pl-10 pr-4 py-2 w-72 rounded-lg border border-slate-200 bg-white text-sm placeholder-slate-400 focus:ring-2 focus:ring-indigo-300 focus:border-indigo-400"
                   placeholder="Search passwords, notes, logins..."
                   type="search"
+                  onChange={(e) => setSearch(e.target.value)}
                 />
               </label>
             </div>
