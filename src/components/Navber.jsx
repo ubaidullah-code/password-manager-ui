@@ -178,6 +178,7 @@ export default function Navber() {
               className="w-full pl-10 pr-4 py-2 rounded-lg border border-slate-200 bg-white text-sm placeholder-slate-400"
               placeholder="Search passwords..."
               type="search"
+              onChange={(e) => setSearch(e.target.value)}
             />
             {/* <button className="w-full text-left px-3 py-2 rounded-md hover:bg-slate-50">
               Profile
